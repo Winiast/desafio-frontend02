@@ -66,15 +66,16 @@ button {
 }
 .bar {
   background: #535bf2;
-  width: 100px;
+  width: 0px;
   height: 100%;
 }
 label {
   margin-bottom: 5px;
 }
-input:not([type='radio']),
+input:not([type="radio"]),
 select {
   height: 40px;
+  background-color: white;
   width: 100%;
   padding: 0;
   border: 1px solid #ccc;

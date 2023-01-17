@@ -35,39 +35,84 @@ Ao enviar, deve-se apresentar um alert javascript com sucesso, limpar todos os c
 do formulário e zerar a barra de progresso novamente.
 */
 
+import { useState, useEffect } from "react";
+
 function App() {
+  const [porcentageBar, setPorcentageBar] = useState(0);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+
+  useEffect(() => {
+    setPorcentageBar(porcentageBar);
+  }, [porcentageBar]);
+
+  const verifyName = () => {
+    if (name.length > 0) {
+      setPorcentageBar(+25);
+    } else {
+      setPorcentageBar(-25);
+    }
+  };
+
+  const verifyEmail = () => {
+    const regex =
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (regex.test(email)) {
+      setPorcentageBar(+25);
+    }
+  };
+
+  const verifyState = () => {};
+
+  const verifyRadio = () => {};
   return (
-    <div className='App'>
+    <div className="App">
       <h3>desafio fernandev</h3>
       <h1>progresso do formulário</h1>
 
       <main>
-        {/* crie a barra de progresso aqui */}
-        <div className='form-group'>
-          <label htmlFor=''>Nome Completo</label>
-          <input />
+        <div className="bar-container">
+          <div className="bar" style={{ width: `${porcentageBar}%` }}></div>
         </div>
-        <div className='form-group'>
-          <label htmlFor=''>E-mail</label>
-          <input />
+        <div className="form-group">
+          <label htmlFor="">Nome Completo</label>
+          <input
+            value={name}
+            placeholder="Digite seu nome completo"
+            onChange={(e) => {
+              setName(e.target.value);
+              verifyName();
+            }}
+          />
         </div>
-        <div className='form-group'>
-          <label htmlFor=''>Estado Civil</label>
+        <div className="form-group">
+          <label htmlFor="">E-mail</label>
+          <input
+            value={email}
+            placeholder="Digite seu e-mail"
+            onChange={(e) => {
+              setEmail(e.target.value);
+              verifyEmail();
+            }}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="">Estado Civil</label>
           <select>
-            <option value=''>- selecione...</option>
-            <option value='solteiro'>Solteiro</option>
-            <option value='casado'>Casado</option>
-            <option value='divorciado'>Divorciado</option>
+            <option value="">- selecione...</option>
+            <option value="solteiro">Solteiro</option>
+            <option value="casado">Casado</option>
+            <option value="divorciado">Divorciado</option>
           </select>
         </div>
-        <div className='form-group'>
-          <label htmlFor=''>Gênero</label>
-          <div className='radios-container'>
+        <div className="form-group">
+          <label htmlFor="">Gênero</label>
+          <div className="radios-container">
             <span>
-              <input type='radio' /> Masculino
+              <input type="radio" /> Masculino
             </span>
             <span>
-              <input type='radio' /> Feminino
+              <input type="radio" /> Feminino
             </span>
           </div>
         </div>
