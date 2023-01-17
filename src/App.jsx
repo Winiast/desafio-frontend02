@@ -41,16 +41,30 @@ function App() {
   const [porcentageBar, setPorcentageBar] = useState(0);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [state, setState] = useState("");
+  const [flag, setFlag] = useState(false);
+  const [flagEmail, setFlagEmail] = useState(false);
+  const [flagState, setFlagState] = useState(false);
+  const [showRadio, setShowRadio] = useState(false);
+  const [flagRadio, setFlagRadio] = useState(false);
+  const [showSubmit, setShowSubmit] = useState(false);
 
   useEffect(() => {
     setPorcentageBar(porcentageBar);
+    if (porcentageBar === 100) {
+      setShowSubmit(true);
+    }
   }, [porcentageBar]);
 
   const verifyName = () => {
-    if (name.length > 0) {
-      setPorcentageBar(+25);
-    } else {
-      setPorcentageBar(-25);
+    const regexName = /^[a-zA-Z]+ [a-zA-Z]+$/;
+
+    if (regexName.test(name)) {
+      setPorcentageBar(porcentageBar + 25);
+      setFlag(true);
+    } else if (name < 1 && porcentageBar > 0) {
+      setPorcentageBar(porcentageBar - 25);
+      setFlag(false);
     }
   };
 
@@ -58,13 +72,48 @@ function App() {
     const regex =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (regex.test(email)) {
-      setPorcentageBar(+25);
+      setPorcentageBar(porcentageBar + 25);
+      setFlagEmail(true);
+    } else if (email < 1 && porcentageBar > 0) {
+      setPorcentageBar(porcentageBar - 25);
+      setFlagEmail(false);
     }
   };
 
-  const verifyState = () => {};
+  const verifyState = () => {
+    if (state !== "") {
+      setPorcentageBar(porcentageBar + 25);
+      setFlagState(true);
+    } else if (state === "" && porcentageBar > 0) {
+      setPorcentageBar(porcentageBar - 25);
+      setFlagState(false);
+    }
+  };
 
-  const verifyRadio = () => {};
+  const verifyRadio = () => {
+    if (flagRadio === false) {
+      setPorcentageBar(porcentageBar + 25);
+      setFlagRadio(true);
+    } else {
+    }
+  };
+
+  const submmit = () => {
+    alert("Formulário enviado com sucesso!");
+    setName("");
+    setEmail("");
+    setState("");
+    setFlag(false);
+    setFlagEmail(false);
+    setFlagState(false);
+    setShowRadio(false);
+    setFlagRadio(false);
+    setShowSubmit(false);
+    setPorcentageBar(0);
+    document.getElementById("radio1").checked = false;
+    document.getElementById("radio2").checked = false;
+    document.getElementById("select").value = "";
+  };
   return (
     <div className="App">
       <h3>desafio fernandev</h3>
@@ -81,8 +130,8 @@ function App() {
             placeholder="Digite seu nome completo"
             onChange={(e) => {
               setName(e.target.value);
-              verifyName();
             }}
+            onBlur={verifyName}
           />
         </div>
         <div className="form-group">
@@ -92,13 +141,19 @@ function App() {
             placeholder="Digite seu e-mail"
             onChange={(e) => {
               setEmail(e.target.value);
-              verifyEmail();
             }}
+            onBlur={verifyEmail}
           />
         </div>
         <div className="form-group">
           <label htmlFor="">Estado Civil</label>
-          <select>
+          <select
+            onChange={(e) => {
+              setState(e.target.value);
+            }}
+            onBlur={verifyState}
+            id="select"
+          >
             <option value="">- selecione...</option>
             <option value="solteiro">Solteiro</option>
             <option value="casado">Casado</option>
@@ -109,14 +164,33 @@ function App() {
           <label htmlFor="">Gênero</label>
           <div className="radios-container">
             <span>
-              <input type="radio" /> Masculino
+              <input
+                type="radio"
+                name="genero"
+                id="radio1"
+                onClick={() => {
+                  setShowRadio(false);
+                  verifyRadio();
+                }}
+              />
+              Masculino
             </span>
             <span>
-              <input type="radio" /> Feminino
+              <input
+                type="radio"
+                id="radio2"
+                name="genero"
+                onClick={() => {
+                  setShowRadio(true);
+                }}
+              />
+              Feminino
             </span>
           </div>
         </div>
-        <button>Enviar Formulário</button>
+        <button disabled={!showSubmit} onClick={submmit}>
+          Enviar Formulário
+        </button>
       </main>
     </div>
   );
